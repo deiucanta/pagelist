@@ -1,35 +1,32 @@
 const separator = '-';
 
-export const pagelist = (page: number, total: number, display: number) => {
-  let left = page - Math.floor((display - 1) / 2);
-  let right = page + Math.ceil((display - 1) / 2);
+export const pagelist = (current: number, total: number, display: number) => {
+  let leftHalf = Math.floor((display - 1) / 2);
+  let rightHalf = Math.ceil((display - 1) / 2);
 
-  if (left < 1) {
-    const offset = 1 - left;
-    right = Math.min(right + offset, total);
-    left = 1;
-  }
+  let left = current - leftHalf;
+  let leftOffset = Math.max(1 - left, 0);
 
-  if (right > total) {
-    const offset = right - total;
-    left = Math.max(left - offset, 1);
-    right = total;
-  }
+  let right = current + rightHalf;
+  let rightOffset = Math.max(right - total, 0);
+
+  left = Math.max(left - rightOffset, 1);
+  right = Math.min(right + leftOffset, total);
 
   const result = [];
 
   if (left === 1) {
-    result.push(...range(left, page - 1));
+    result.push(...range(left, current - 1));
   } else {
-    result.push(1, separator, ...range(left + 2, page - 1));
+    result.push(1, separator, ...range(left + 2, current - 1));
   }
 
-  result.push(page);
+  result.push(current);
 
   if (right === total) {
-    result.push(...range(page + 1, right));
+    result.push(...range(current + 1, right));
   } else {
-    result.push(...range(page + 1, right - 2), separator, total);
+    result.push(...range(current + 1, right - 2), separator, total);
   }
 
   return result;
